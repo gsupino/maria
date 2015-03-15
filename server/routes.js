@@ -8,7 +8,7 @@ module.exports = function (app) {
   //app.use('/api/ingredients', require('./api/ingredient'));
   //app.use('/api/recipes', require('./api/recipe'));
 
-  //app.use('/api/users', require('./api/user'));
+  app.use('/api/users', require('./api/users'));
 
   //app.use('/auth', require('./auth'));
 
