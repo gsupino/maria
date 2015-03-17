@@ -1,8 +1,6 @@
-
 'use strict';
 
-
-module.exports = function (app) {
+export function serverRoutes (app) {
 
   // Insert routes below
   //app.use('/api/ingredients', require('./api/ingredient'));

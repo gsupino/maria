@@ -1,15 +1,9 @@
 'use strict'
 import co from 'co'
 import {adapterMongo} from '../adapters/adapterMongo';
-
+import validator from 'lx-valid';
 
 //import {Adapter} from './adapter'
-const Joi = require('joi');
-
-let schema = {
-  name: Joi.string()
-}
-
 
 class UserService {
   constructor(adapter) {

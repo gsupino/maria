@@ -1,18 +1,15 @@
-/* @flow weak */
-
-"use strict";
-var express = require('express');
-var compression = require('compression');
-var cors = require('cors');
-var compression = require('compression');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var cookieParser = require('cookie-parser');
-var appRoot=require('app-root-path');
+'use strict';
+const express = require('express');
+const compression = require('compression');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
+const cookieParser = require('cookie-parser');
+const appRoot=require('app-root-path');
 
 
-module.exports=function(app){
-  var env = app.get('env');
+export function expressConfig(app){
+  const env = app.get('env');
   // Gzip all the things
   app.use(compression());
 

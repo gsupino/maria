@@ -1,5 +1,6 @@
-"use strict";
+'use strict';
 require('babel/register');
+
 
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -11,9 +12,11 @@ const config=require('./config/environment')
 require('./adapters/adapterMongo');
 
 //Setup server
-let server=express();
-require('./config/express')(server);
-require('./routes')(server);
+const server=express();
+let serverRoutes=require('./routes').serverRoutes;
+let expressConfig=require('./config/express').expressConfig;
+serverRoutes(server);
+expressConfig(server);
 
 //Start server
 const port = config.port;
