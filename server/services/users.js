@@ -8,17 +8,32 @@ import validator from 'lx-valid';
 class UserService {
   constructor(adapter) {
     this.adapter=adapterMongo;
+    this.collection='users';
   }
 
- list() {
-    let self=this
+  find(){
+    let self=this;
     return co(function*(){
-      let result=yield self.adapter.getQuery('users',{})
-      return result
+      try{
+        return yield self.adapter.getQuery(self.collection,{},{});
+      }
+      catch(e){
+        return e;
+      }
     })
-
   }
 
+  read(id){
+    let self=this;
+    return co(function*(){
+      try{
+        return yield self.adapter.getById(self.collection,id);
+      }
+      catch(e){
+        return e;
+      }
+    })
+  }
 
 }
 

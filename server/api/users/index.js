@@ -1,15 +1,17 @@
 'use strict';
 
-'use strict';
-
 const express = require('express');
-const controller = require('./users.controller');
+import * as controller from './users.controller';
 //const config = require('../../config/environment');
 //const auth = require('../../auth/auth.service');
 
 const router = express.Router();
 
-router.get('/', controller.index);
+router.get('/', controller.find);
+router.get('/:id',controller.read);
+
+router.post('/',controller.create);
+
 //router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 //router.get('/me', auth.isAuthenticated(), controller.me);
 //router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);

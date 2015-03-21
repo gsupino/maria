@@ -10,12 +10,28 @@ class AdapterMongo {
     this.db=monk(config.mongo.uri,config.mongo.options);
   }
 
-  *getQuery(collection,query,options){
+  *getQuery(collection,id,query,options){
     let q=query ||{}
     let opt=options || {}
     let col=wrap(this.db.get(collection))
-    let result = yield (col.find(q,opt));
-    return result;
+    try{
+      let result = yield (col.find(q,opt));
+      return result;
+    }
+    catch(e){
+      return e;
+    }
+  }
+
+  *getById(collection,id){
+    let col=wrap(this.db.get(collection))
+    try{
+      let result = yield (col.findById(id));
+      return result;
+    }
+    catch(e){
+      return e;
+    }
   }
 
   close(){
