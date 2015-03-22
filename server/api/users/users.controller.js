@@ -29,12 +29,12 @@ const UserSchema ={
   },
 
   image: {
-    type: Schema.ObjectId,
+    type: String,
     ref: 'Image'
   }
 };
 
-import schema from 'simple-mongo-schema'(UserSchema);
+var schema =require('simple-mongo-schema')(UserSchema);
 
 export function find(req, res) {
 	co(function*(){
