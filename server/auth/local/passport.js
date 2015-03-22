@@ -1,18 +1,38 @@
-'use strict';
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
-const express = require('express');
-const passport = require('passport');
-const User = require('../api/user/user.model');
+import appRoot from 'app-root-path';
+const servicePath = appRoot + '/services/users'
 
-// Passport Configuration
-require('./local/passport').setup(User, config);
-require('./facebook/passport').setup(User, config);
-
-
-const router = express.Router();
-
-router.use('/local', require('./local'));
-router.use('/facebook', require('./facebook'));
+import userService from servicePath;
+import co from 'co';
 
 
-module.exports = router;
+export function setup() {
+    passport.use(new LocalStrategy({
+            usernameField: 'email',
+            passwordField: 'password' // this is the virtual field on the model
+        },
+        function(email, password, done) {
+            co(function*() {
+                try {
+                    let user = yield userService.getUserByEmail(email);
+                    if (!user) {
+                        return done(null, false, {
+                            message: 'This email is not registered.'
+                        });
+                    }
+                    if (!userService.comparePassword(password, user.password)) {
+                        return done(null, false, {
+                            message: 'This password is not correct.'
+                        });
+                    }
+                    return done(null, user);
+
+                } catch (err) {
+                    done(err);
+                }
+            })
+        }
+    ));
+};

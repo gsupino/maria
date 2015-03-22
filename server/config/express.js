@@ -5,6 +5,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const expressValidator = require('express-validator');
+const passport = require('passport');
 const appRoot=require('app-root-path');
 
 
@@ -28,8 +30,9 @@ export function expressConfig(app){
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.use(methodOverride());
+  app.use(expressValidator());
   app.use(cookieParser());
-  //app.use(passport.initialize());
+  app.use(passport.initialize());
 
 }
 

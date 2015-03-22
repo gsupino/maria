@@ -3,7 +3,6 @@ import co from 'co'
 import {adapterMongo} from '../adapters/adapterMongo';
 import validator from 'lx-valid';
 
-//import {Adapter} from './adapter'
 
 class UserService {
     constructor(adapter) {
@@ -32,6 +31,25 @@ class UserService {
             }
         })
     }
+
+    getUserByEmail(email, password) {
+        let self = this;
+        let email = email.toLowerCase();
+        return co(function*() {
+            try {
+                return yield self.adapter.getOne(self.collection, {
+                    email: email
+                }, {});
+            } catch (e) {
+                return e;
+            }
+        })
+    }
+
+    comparePassword(password, passwordStored) {
+        return password === passwordStored
+    }
+
 
 }
 
