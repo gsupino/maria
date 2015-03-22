@@ -6,7 +6,7 @@ const config = require('../config/environment');
 
 // Passport Configuration
 require('./local/passport').setup();
-require('./facebook/passport').setup(User, config);
+require('./facebook/passport').setup(config);
 
 
 

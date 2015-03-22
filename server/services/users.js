@@ -50,6 +50,35 @@ class UserService {
         return password === passwordStored
     }
 
+    manageFacebookUser(accessToken, refreshToken, profile) {
+        let self = this;
+        return co(function*() {
+            try {
+                let user = yield self.adapter.getOne(self.collection, {
+                    facebook: profile.id
+                }, {});
+                if (!user) {
+                    user = {};
+                    user.email = profile._json.email;
+                    user.facebook = profile.id;
+                    user.tokens.push({
+                        kind: 'facebook',
+                        accessToken: accessToken
+                    });
+                    user.profile.name = profile.displayName;
+                    user.profile.gender = profile._json.gender;
+                    user.profile.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
+                    user.role = 'user';
+                    return yield self.adapter.create(user);
+
+                }
+
+            } catch (e) {
+                return e;
+            }
+        })
+    }
+
 
 }
 

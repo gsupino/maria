@@ -1,7 +1,7 @@
 'use strict'
 import monk from 'monk';
-import wrap from'co-monk';
-import config from'../config/environment';
+import wrap from 'co-monk';
+import config from '../config/environment';
 
 class AdapterMongo {
 
@@ -41,6 +41,17 @@ class AdapterMongo {
             return result;
         } catch (e) {
             return e;
+        }
+    }
+
+    * create(collection, doc) {
+        let col = wrap(this.db.get(collection))
+        try{
+          let result=yield col.insert(doc);
+          return result;
+        }
+        catch(e){
+          return e;
         }
     }
 
