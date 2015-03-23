@@ -2,10 +2,8 @@
 
 const express = require('express');
 const passport = require('passport');
-import appRoot from 'app-root-path';
-const servicePath = appRoot + '/services/auth'
 
-import authService from servicePath;
+import * as authService from '../../services/auth';
 
 const router = express.Router();
 
@@ -14,8 +12,8 @@ router
     scope: ['email', 'user_about_me'],
     failureRedirect: '/signup',
     session: false
-  }))
-
+  })
+  )
   .get('/callback', passport.authenticate('facebook', {
     failureRedirect: '/signup',
     session: false

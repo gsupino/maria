@@ -15,8 +15,8 @@ require('./adapters/adapterMongo');
 const server=express();
 let serverRoutes=require('./routes').serverRoutes;
 let expressConfig=require('./config/express').expressConfig;
-serverRoutes(server);
 expressConfig(server);
+serverRoutes(server);
 
 //Start server
 const port = config.port;

@@ -1,10 +1,7 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-import appRoot from 'app-root-path';
-const servicePath = appRoot + '/services/users'
-
-import userService from servicePath;
+import {userService} from '../../services/users';
 import co from 'co';
 
 

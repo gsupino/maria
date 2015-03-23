@@ -70,7 +70,8 @@ class UserService {
                     user.profile.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
                     user.role = 'user';
                     return yield self.adapter.create(user);
-
+                }else{
+                  return user;
                 }
 
             } catch (e) {
