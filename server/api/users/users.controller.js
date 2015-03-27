@@ -2,65 +2,6 @@
 import {userService} from '../../services/users';
 import co from 'co';
 
-const UserSchema = {
-    email: {
-        type: String,
-        unique: true,
-        lowercase: true
-    },
-    password: String,
-    provider: String,
-    facebook: String,
-    tokens: Array,
-    profile: {
-        name: {
-            type: String,
-            default: ''
-        },
-        gender: {
-            type: String,
-            default: ''
-        },
-        location: {
-            type: String,
-            default: ''
-        },
-        website: {
-            type: String,
-            default: ''
-        },
-        picture: {
-            type: String,
-            default: ''
-        }
-    },
-    resetPasswordToken: String,
-    resetPasswordExpires: Date,
-    salt: {
-        type: String
-    },
-    roles: {
-        type: [{
-            type: String,
-            enum: ['user', 'admin']
-        }],
-        default: ['user']
-    },
-    updated: {
-        type: Date
-    },
-    created: {
-        type: Date,
-        default: Date.now
-    },
-
-    image: {
-        type: String,
-        ref: 'Image'
-    }
-};
-
-var schema = require('simple-mongo-schema')(UserSchema);
 
 export function find(req, res) {
     co(function*() {
@@ -78,9 +19,15 @@ export function read(req, res) {
 };
 
 export function create(req, res) {
-
-
-
-
-
-}
+    co(function*(){
+            try{
+                let user=yield userService.create(req.body);
+                console.log(user)
+                res.send(user);
+            }
+            catch(e){
+                console.log('err');
+                console.log(e);
+            }
+    })
+};

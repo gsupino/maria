@@ -46,12 +46,11 @@ class AdapterMongo {
 
     * create(collection, doc) {
         let col = wrap(this.db.get(collection))
-        try{
-          let result=yield col.insert(doc);
-          return result;
-        }
-        catch(e){
-          return e;
+        try {
+            let result = yield col.insert(doc);
+            return result;
+        } catch (e) {
+            return e;
         }
     }
 
