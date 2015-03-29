@@ -7,6 +7,7 @@ export function serverRoutes (app) {
   //app.use('/api/recipes', require('./api/recipe'));
 
   app.use('/api/users', require('./api/users'));
+  app.use('/api/images', require('./api/images'));
 
   app.use('/auth', require('./auth'));
 

@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const expressValidator = require('express-validator');
 const passport = require('passport');
 const appRoot=require('app-root-path');
+const multer  = require('multer');
 
 
 export function expressConfig(app){
@@ -26,7 +27,7 @@ export function expressConfig(app){
   // Cross-origin resource sharing
   app.use(cors());
 
-
+  app.use(multer({dest:'./upload'}));
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.use(methodOverride());

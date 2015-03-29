@@ -26,7 +26,7 @@ const schema={
         type:Joi.string().valid('user', 'admin')
     }),
     updated:Joi.date(),
-    created:Joi.date().default(Date.now),
+    created:Joi.date().default(Date.now,'time of creation'),
     image:Joi.objectId()
 }
 
@@ -35,29 +35,7 @@ class UserService extends BaseService{
     constructor() {
         super('users')
     }
-    /*
-    find() {
-        let self = this;
-        return co(function*() {
-            try {
-                return yield self.adapter.getQuery(self.collection, {}, {});
-            } catch (e) {
-                return e;
-            }
-        })
-    }
 
-    read(id) {
-        let self = this;
-        return co(function*() {
-            try {
-                return yield self.adapter.getById(self.collection, id);
-            } catch (e) {
-                return e;
-            }
-        })
-    }
-    */
     create(doc){
         let self=this;
         //Validate the parameters
@@ -75,11 +53,7 @@ class UserService extends BaseService{
                 return Promise.reject(e);
             }
         })
-
-
     }
-
-
 
     getUserByEmail(email, password) {
         let self = this;

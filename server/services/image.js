@@ -1,7 +1,8 @@
 'use strict'
 import co from 'co'
-import {adapterMongo} from '../adapters/adapterMongo';
 import Joi from 'joi';
+import {BaseService} from './base';
+import fs from 'co-fs';
 
 Joi.objectId=require('joi-objectid');
 
@@ -14,41 +15,37 @@ const schema={
 	encoding:Joi.string(),
 	mimetype:Joi.string(),
 	extension:Joi.string(),
-	user:Joi.objectId().required()
+	user:Joi.objectId().required(),
 	storagepath:Joi.string(),
 	assetpath:Joi.string()
 }
 
 
-class ImageService{
+class ImageService extends BaseService{
 	constructor(adapter){
-		this.adapter=adapterMongo;
-		this.collection='Image';
+		super('images');
 	}
 
 
-    find() {
-        let self = this;
-        return co(function*() {
-            try {
-                return yield self.adapter.getQuery(self.collection, {}, {});
-            } catch (e) {
-                return e;
-            }
-        })
-    }
+	create(data){
+        let self=this;
+        let metadata=this.getMetadata(data);
+        console.log(this.getMetadata(data));
+        
+        return co(function*(){
+            let check=yield self.moveToStorage(metadata.path,metadata.name); 
+            console.log(check)
 
-    read(id) {
-        let self = this;
-        return co(function*() {
-            try {
-                return yield self.adapter.getById(self.collection, id);
-            } catch (e) {
-                return e;
-            }
+
         })
-    }
-	create(data,userId){
+
+        //completo il modello image
+
+        //trasferisco il file nel suo storage
+
+        //creo il doc nel db
+
+
 
 	}
 
@@ -56,4 +53,32 @@ class ImageService{
 
 	}
 
+    //Private
+    getMetadata(file) {
+        let obj = {
+            name: file.name,
+            originalname: file.originalname,
+            encoding: file.encoding,
+            mimetype: file.mimetype,
+            extension: file.extension,
+            size: file.size,
+            path: file.path
+        }
+        return obj;
+    }
+
+    * moveToStorage(pathFile,name) {
+        let targetPath = './asset/'+name;
+        console.log(pathFile);
+        try {
+            return yield fs.rename(pathFile, targetPath);
+
+        } catch (e) {
+            return e;
+        }
+
+    }
+
 }
+
+export let imageService = new ImageService();
