@@ -19,16 +19,20 @@ export function read(req, res) {
 };
 
 export function create(req, res) {
-    co(function*(){
-            try{
-                console.log(req.files)
+    co(function*() {
+        try {
 
-                let user=yield imageService.create(req.files.file);
-                res.send(user);
-            }
-            catch(e){
-                console.log('err');
-                console.log(e);
-            }
+            let image = yield imageService.create(req.files.file, req.body.userId);
+            res.send(image);
+        } catch (e) {
+            console.log('err');
+            console.dir(e.Error);
+            e.error.details.forEach(function(detail) {
+                errors.push({
+                    key: detail.path,
+                    message: detail.message
+                });
+            });
+        }
     })
 };
