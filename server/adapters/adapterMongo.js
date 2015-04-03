@@ -18,7 +18,7 @@ class AdapterMongo {
             let result = yield(col.find(q, opt));
             return result;
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -28,30 +28,44 @@ class AdapterMongo {
             let result = yield(col.findById(id));
             return result;
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
     * getOne(collection, query, options) {
         let q = query || {}
         let opt = options || {}
-        let col = wrap(this.db.get(collection))
+        let col = wrap(this.db.get(collection));
         try {
             let result = yield(col.findOne(q, opt));
             return result;
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
     * create(collection, doc) {
-        let col = wrap(this.db.get(collection))
+        let col = wrap(this.db.get(collection));
         try {
             let result = yield col.insert(doc);
             return result;
         } catch (e) {
-            return e;
+            throw e;
         }
+    }
+
+    * remove(collection, id) {
+        let col = wrap(this.db.get(collection));
+        try {
+            let result = yield(col.remove({
+                _id: id
+            }));
+            return result;
+        } catch (e) {
+            throw e;
+        }
+
+
     }
 
     close() {

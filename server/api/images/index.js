@@ -11,6 +11,7 @@ router.get('/', controller.find);
 router.get('/:id',controller.read);
 
 router.post('/',controller.create);
+router.delete('/:id',controller.remove);
 
 //router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 

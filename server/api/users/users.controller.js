@@ -5,29 +5,38 @@ import co from 'co';
 
 export function find(req, res) {
     co(function*() {
-        let users = yield userService.find();
-        res.send(users);
+        try {
+            let users = yield userService.find();
+            res.send(users);
+
+        } catch (e) {
+            return e;
+        }
+
     })
 };
 
 export function read(req, res) {
     co(function*() {
-        let id = req.params.id;
-        let users = yield userService.read(id);
-        res.send(users);
+        try {
+            let id = req.params.id;
+            let users = yield userService.read(id);
+            res.send(users);
+
+        } catch (e) {
+            return e;
+        }
+
     })
 };
 
 export function create(req, res) {
-    co(function*(){
-            try{
-                let user=yield userService.create(req.body);
-                console.log(user)
-                res.send(user);
-            }
-            catch(e){
-                console.log('err');
-                console.log(e);
-            }
+    co(function*() {
+        try {
+            let user = yield userService.create(req.body);
+            res.send(user);
+        } catch (e) {
+            return e;
+        }
     })
 };

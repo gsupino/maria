@@ -2,11 +2,11 @@
 import co from 'co'
 import {adapterMongo} from '../adapters/adapterMongo';
 
-export class BaseService{
-	constructor(collection){
-		this.adapter=adapterMongo;
-		this.collection=collection;
-	}
+export class BaseService {
+    constructor(collection) {
+        this.adapter = adapterMongo;
+        this.collection = collection;
+    }
 
 
     find() {
@@ -30,6 +30,4 @@ export class BaseService{
             }
         })
     }
-	
-
 }

@@ -6,58 +6,81 @@ import fs from 'co-fs';
 import crypto from 'crypto';
 import uuid from 'uuid';
 
-Joi.objectId=require('joi-objectid');
+const appRoot = require('app-root-path').path;
 
-const schema={
-	name:Joi.string().required(),
-	originalname:Joi.string(),
-	created:Joi.date().default(Date.now),
-	caption:Joi.string(),
-	size:Joi.number(),
-	encoding:Joi.string(),
-	mimetype:Joi.string(),
-	extension:Joi.string(),
-	user:Joi.objectId().required(),
-	storagepath:Joi.string(),
-	assetpath:Joi.string()
+Joi.objectId = require('joi-objectid');
+
+const schema = {
+    name: Joi.string().required(),
+    originalname: Joi.string(),
+    created: Joi.date().default(Date.now),
+    caption: Joi.string(),
+    size: Joi.number(),
+    encoding: Joi.string(),
+    mimetype: Joi.string(),
+    extension: Joi.string(),
+    user: Joi.objectId().required(),
+    storagepath: Joi.string(),
+    assetpath: Joi.string()
 }
 
 
-class ImageService extends BaseService{
-	constructor(adapter){
-		super('images');
-	}
+class ImageService extends BaseService {
+    constructor(adapter) {
+        super('images');
+    }
 
 
     create(data, userId) {
         let self = this;
         let metadata = this._getMetadata(data);
-        console.log(metadata);
         let name = this._generateName();
+        let targetPath = this._generatePath(name, metadata.extension);
         //completo il modello image
         metadata.name = name;
         metadata.user = userId;
-        metadata.storagepath = './asset/' + name;
-        metadata.assetpath = './asset/' + name;
-        let path=metadata.path;
+        metadata.storagepath = targetPath;
+        metadata.assetpath = targetPath;
+        let path = metadata.path;
         delete metadata.path;
         //Validate the parameters
         let err = Joi.validate(metadata, schema);
-        console.dir(err ? err : 'Valid!');
+        //console.dir(err ? err : 'Valid!');
         if (err.error) throw new Error(err);
         return co(function*() {
-            //trasferisco il file nel suo storage
-            let check = yield self._moveToStorage(path, name);
-            console.log(metadata);
-            //creo il doc nel db
-            let image= yield self.adapter.create(self.collection,metadata);
-            return image;
+            try {
+                //trasferisco il file nel suo storage
+                let check = yield self._moveToStorage(path, targetPath);
+                //creo il doc nel db
+                let image = yield self.adapter.create(self.collection, metadata);
+                return image;
+
+            } catch (e) {
+                throw e;
+            }
         })
     }
 
-	remove(){
+    remove(id) {
+        let self = this;
 
-	}
+        return co(function*() {
+            try {
+                //load the image file model
+                let image = yield self.adapter.getById(self.collection, id);
+                //delete file
+                let checkFile = yield self._removeFromStorage(image.storagepath);
+                //delete model from db
+                let check = yield self.adapter.remove(self.collection, id);
+                return;
+
+            } catch (e) {
+                throw e;
+            }
+
+
+        })
+    }
 
     //Private
     _getMetadata(file) {
@@ -73,17 +96,30 @@ class ImageService extends BaseService{
         return obj;
     }
 
-    * _moveToStorage(pathFile,name) {
-        let targetPath = './asset/'+name;
-        console.log(pathFile);
+    * _moveToStorage(pathFile, targetPath) {
         try {
             return yield fs.rename(pathFile, targetPath);
 
         } catch (e) {
-            return e;
+            throw e;
         }
 
     }
+
+    * _removeFromStorage(pathFile) {
+        try {
+            return yield fs.unlink(pathFile);
+
+        } catch (e) {
+            throw e;
+        }
+
+    }
+
+    _generatePath(name, ext) {
+        return (appRoot + '/asset/' + name + '.' + ext);
+    }
+
 
     _generateName() {
         return crypto.createHash('md5').update(uuid.v4()).digest('hex');
