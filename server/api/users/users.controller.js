@@ -10,7 +10,7 @@ export function find(req, res) {
             res.send(users);
 
         } catch (e) {
-            return e;
+            res.status(401).send(e);
         }
 
     })
@@ -24,7 +24,7 @@ export function read(req, res) {
             res.send(users);
 
         } catch (e) {
-            return e;
+            res.status(401).send(e);
         }
 
     })
@@ -36,20 +36,29 @@ export function create(req, res) {
             let user = yield userService.create(req.body);
             res.send(user);
         } catch (e) {
-            return e;
+            res.status(401).send(e);
         }
     })
 };
 
-export function update(req,res){
-  co(function*(){
-    try{
-      let id=req.params.id;
-      let file=req.files.file || null
-      let oldUser=req.user;//doc user presente perchè autenticato
-      let user=yield userService.update(id,req.body,oldUser,file);
-    }catch(e){
+export function update(req, res) {
+    co(function*() {
+        try {
+            let id = req.params.id;
+            let file = req.files.file || null
+            let oldUser = req.user; //doc user presente perchè autenticato
+            let user = yield userService.update(id, req.body, oldUser, file);
+            res.send(user);
+        } catch (e) {
+            res.status(401).send(e);
 
-    }
-  })
+        }
+    })
 };
+
+export function changePassword(req, res) {
+
+
+
+};
+

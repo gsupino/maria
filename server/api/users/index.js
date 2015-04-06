@@ -8,9 +8,11 @@ import * as controller from './users.controller';
 const router = express.Router();
 
 router.get('/', controller.find);
-router.get('/:id',controller.read);
-
 router.post('/',controller.create);
+
+router.post('/password',controller.changePassword);
+
+router.get('/:id',controller.read);
 router.put('/:id',controller.update);
 
 //router.delete('/:id', auth.hasRole('admin'), controller.destroy);

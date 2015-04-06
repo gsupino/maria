@@ -8,6 +8,8 @@ export function serverRoutes(app) {
 
     app.use('/api/users', require('./api/users'));
     app.use('/api/images', require('./api/images'));
+    app.use('/api/ingredients', require('./api/ingredients'));
+    app.use('/api/recipes', require('./api/recipes'));
 
     app.use('/auth', require('./auth'));
 

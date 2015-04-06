@@ -13,7 +13,7 @@ Joi.objectId = require('joi-objectid');
 const schema = {
     name: Joi.string().required(),
     originalname: Joi.string(),
-    created: Joi.date().default(Date.now),
+    created: Joi.date().default(Date.now,'time of creation'),
     caption: Joi.string(),
     size: Joi.number(),
     encoding: Joi.string(),
