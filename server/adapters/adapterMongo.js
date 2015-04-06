@@ -54,6 +54,16 @@ class AdapterMongo {
         }
     }
 
+    * updateById(collection, id, doc) {
+        let col = wrap(this.db.get(collection));
+        try {
+            let result = yield col.updateById(id,doc);
+            return result;
+        } catch (e) {
+            throw e;
+        }
+    }
+
     * remove(collection, id) {
         let col = wrap(this.db.get(collection));
         try {
@@ -64,9 +74,25 @@ class AdapterMongo {
         } catch (e) {
             throw e;
         }
+    }
 
+    * removeField(collection, id, field) {
+        let col = wrap(this.db.get(collection));
+        try {
+            let result = yield(col.findAndModify({
+                _id: id
+            }, {
+                $unset: {
+                    field: 1
+                }
+            }));
+            return result;
+        } catch (e) {
+            throw e;
+        }
 
     }
+
 
     close() {
         this.db.close()

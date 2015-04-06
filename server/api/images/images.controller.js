@@ -51,3 +51,15 @@ export function remove(req, res) {
         }
     })
 };
+
+export function changePassword(req,res){
+    
+
+
+};
+
+
+
+
+
+

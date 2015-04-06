@@ -8,9 +8,11 @@ import * as controller from './images.controller';
 const router = express.Router();
 
 router.get('/', controller.find);
-router.get('/:id',controller.read);
-
 router.post('/',controller.create);
+
+router.post('/password',controller.changePassword);
+
+router.get('/:id',controller.read);
 router.delete('/:id',controller.remove);
 
 //router.delete('/:id', auth.hasRole('admin'), controller.destroy);

@@ -2,6 +2,7 @@
 import co from 'co'
 import Joi from 'joi';
 import {BaseService} from './base';
+import {imageService} from './image';
 
 Joi.objectId = require('joi-objectid');
 
@@ -49,6 +50,42 @@ class UserService extends BaseService {
                 if (checkEmail.length > 0) throw new Error('email already used');
                 let user = yield self.adapter.create(self.collection, doc);
                 return user;
+            } catch (e) {
+                throw e;
+            }
+        })
+    }
+
+    update(id, newDoc, oldDoc, file) {
+        let self = this;
+        //Validate the parameters
+        let err = Joi.validate(doc, schema);
+        if (err.error) throw new Error(err);
+        return co(function*() {
+            try {
+                //gestione file picture
+                if (file) {
+                    //creo il doc della nuova image
+                    let image = yield imageService.create(file, id);
+                    newDoc.image = image._id;
+                    //lo user aveva gia impostato una profile picture
+                    if (oldDoc.image) {
+                        //delete old imnage
+                        let check = yield imageService.remove(oldDoc.image._id);
+                    }
+                }
+                //lo user vuole il delete dell'immagine del profile 
+                else {
+                    if (oldDoc.image && !newDoc.image) {
+                        //delete  image
+                        let check = yield self.adapter.remove(self.collection, oldDoc.image._id)
+                            //delete image field into doc user
+                        check = yield self.adapter.removeField(self.collection, id, 'image');
+                    }
+                }
+                let user = yield self.adapter.updateById(id, newDoc);
+                return user;
+
             } catch (e) {
                 throw e;
             }

@@ -40,3 +40,16 @@ export function create(req, res) {
         }
     })
 };
+
+export function update(req,res){
+  co(function*(){
+    try{
+      let id=req.params.id;
+      let file=req.files.file || null
+      let oldUser=req.user;//doc user presente perchè autenticato
+      let user=yield userService.update(id,req.body,oldUser,file);
+    }catch(e){
+
+    }
+  })
+};
