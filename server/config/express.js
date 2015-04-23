@@ -9,17 +9,25 @@ const expressValidator = require('express-validator');
 const passport = require('passport');
 const appRoot=require('app-root-path').path;
 const multer  = require('multer');
-
+const nunjucks=require('nunjucks');
 
 export function expressConfig(app) {
     const env = app.get('env');
     // Gzip all the things
     app.use(compression());
 
+    app.use('/public', express.static(appRoot + '/build'));
+
     // Serve a static directory for the webpack-compiled Javascript and CSS. Only in production since the webpack dev server handles this otherwise.
     if (env === "production") {
         app.use('/build', express.static(appRoot + '/build'));
     }
+
+    //configure numjucks
+    nunjucks.configure('views', {
+        autoescape: true,
+        express:app
+    });
 
     // Serves up a static directory for images and other assets that we don't (yet) require via Webpack
     app.use('/static', express.static(appRoot + '/static'));

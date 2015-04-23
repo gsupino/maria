@@ -1,6 +1,9 @@
 'use strict';
-require('babel/register');
-
+require('babel/register')({
+  experimental: true
+});
+const appRoot = require('app-root-path').path;
+require(appRoot+'/shared/init');
 
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';

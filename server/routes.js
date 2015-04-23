@@ -3,8 +3,6 @@
 export function serverRoutes(app) {
 
     // Insert routes below
-    //app.use('/api/ingredients', require('./api/ingredient'));
-    //app.use('/api/recipes', require('./api/recipe'));
 
     app.use('/api/users', require('./api/users'));
     app.use('/api/images', require('./api/images'));
@@ -20,10 +18,8 @@ export function serverRoutes(app) {
         });
 
     //Server render Client
-
-    app.route('/').get(function(req, res) {
-        res.send('ok');
-    });
+    //import {appView} from './appView';
+    app.route('/').get(require('./appView'));
 
     // All other routes should redirect to the index.html
     app.route('*//*')
