@@ -52,12 +52,12 @@ gulp.task("webpack", function() {
 });
 
 gulp.task("webpack:work", function() {
-    return gulp.src('./work/app.js')
+    return gulp.src('./work/app/app.js')
         .pipe(webpack({
             resolve: {
                 extensions: ['', '.js']
             },
-            entry: './work/app.js',
+            entry: './work/app/app.js',
             output: {
                 path: __dirname + '/work/build/js',
                 filename: 'app.js'
@@ -92,11 +92,11 @@ gulp.task("webpack:work", function() {
 
 // Watch Files For Changes
 gulp.task('watch', function () {
-    gulp.watch('./work/**/*.js', ['webpack']);
+    gulp.watch(assets, ['webpack']);
 });
 
 gulp.task('watch:work',function(){
-    gulp.watch(assets, ['webpack:work']);
+    gulp.watch(['./work/app/**/*.js'], ['webpack:work']);
 
 });
 
