@@ -1,0 +1,7 @@
+export const INFO_LOAD = 'INFO_LOAD';
+export const INFO_LOAD_SUCCESS = 'INFO_LOAD_SUCCESS';
+export const INFO_LOAD_FAIL = 'INFO_LOAD_FAIL';
+
+export const IMAGE_LOAD = 'IMAGE_LOAD';
+export const IMAGE_LOAD_SUCCESS = 'IMAGE_LOAD_SUCCESS';
+export const IMAGE_LOAD_FAIL = 'IMAGE_LOAD_FAIL';
