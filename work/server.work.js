@@ -1,8 +1,8 @@
 'use strict';
 require('babel/register')({
-  experimental: true
+    experimental: true
 });
-var fs = require('fs'); 
+var fs = require('fs');
 
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -14,7 +14,7 @@ const server=express();
 server.use('/build', express.static(__dirname + '/build'));
 console.log(__dirname + '/build')
 server.get('/', function (req, res) {
-	res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 const port=3000;

@@ -1,108 +1,59 @@
-var gulp=require('gulp');
-var nodemon=require('gulp-nodemon');
+var gulp = require('gulp');
+var gutil = require("gulp-util");
+var webpack = require("webpack");
+var webpackConfig=require('./webpack.config');
 var runSequence=require('run-sequence');
-var webpack = require('gulp-webpack');
+var nodemon = require('gulp-nodemon');
 
 
-var assets = './shared/**/*.js';
+var watch=false;
 
-gulp.task('nodemon', function (done) {
-    nodemon({ script: './server/server.js', env: { 'NODE_ENV': 'development', 'DEBUG': 'MB:*' }})
+// Production build
+gulp.task("build", ["webpack:build"]);
+
+gulp.task("webpack:build", function(callback) {
+    var verbose =false ;
+
+    function bundle(err, stats) {
+        if(err) throw new gutil.PluginError("webpack:build", err);
+        gutil.log("[webpack:build]", stats.toString({
+            //colors: $.util.colors.supportsColor,
+            hash: verbose,
+            version: verbose,
+            timings: verbose,
+            chunks: verbose,
+            chunkModules: verbose,
+            cached: verbose,
+            cachedAssets: verbose
+        }));
+    }
+    // run webpack
+    var compiler=webpack(webpackConfig);
+    if (watch) {
+        compiler.watch(200, bundle);
+    } else {
+        compiler.run(bundle);
+    }
+
+});
+// Build and start watching for modifications
+gulp.task('build:watch', function(callback) {
+    watch = true;
+    runSequence('build',function() {
+        gulp.watch('./src/**/*.*', []);
+        callback();
+    });
+});
+
+gulp.task('server:nodemon', function (done) {
+    nodemon({
+        script: './babel.server.js',
+        "execMap": {
+            "js": "iojs"
+        },
+        env: {'NODE_ENV': 'development', 'DEBUG': 'MB:*'}
+    })
         .on('restart', function () {
             console.log('restarted!');
         });
-});
-
-gulp.task("webpack", function() {
-    return gulp.src('./client/app.js')
-        .pipe(webpack({
-            resolve: {
-                extensions: ['', '.js']
-            },
-            entry: './client/app.js',
-            output: {
-                path: __dirname + '/build/js',
-                filename: 'app.js'
-            },
-            devtool: "source-map",
-            module: {
-                loaders: [{
-                    test: /\.css$/,
-                    loader: 'style!css'
-                }, {
-                    test: /\.jsx?$/,
-                    loaders: ['babel-loader?stage=1'],
-                    exclude: /node_modules/
-                }]
-            },
-            stats: {
-                colors: true
-            },
-            devtool: 'eval-source-map',
-
-            plugins: [
-                //new webpack.HotModuleReplacementPlugin(),
-                //new webpack.NoErrorsPlugin()
-            ],
-            externals: {
-                vertx: '{}'
-            }
-        }))
-        .pipe(gulp.dest('./build/js'));
-});
-
-gulp.task("webpack:work", function() {
-    return gulp.src('./work/app/app.js')
-        .pipe(webpack({
-            resolve: {
-                extensions: ['', '.js']
-            },
-            entry: './work/app/app.js',
-            output: {
-                path: __dirname + '/work/build/js',
-                filename: 'app.js'
-            },
-            devtool: "source-map",
-            module: {
-                loaders: [{
-                    test: /\.css$/,
-                    loader: 'style!css'
-                }, {
-                    test: /\.jsx?$/,
-                    loaders: ['babel-loader?stage=1'],
-                    exclude: /node_modules/
-                }]
-            },
-            stats: {
-                colors: true
-            },
-            devtool: 'eval-source-map',
-
-            plugins: [
-                //new webpack.HotModuleReplacementPlugin(),
-                //new webpack.NoErrorsPlugin()
-            ],
-            externals: {
-                vertx: '{}'
-            }
-        }))
-        .pipe(gulp.dest('./work/build/js'));
-});
-
-
-// Watch Files For Changes
-gulp.task('watch', function () {
-    gulp.watch(assets, ['webpack']);
-});
-
-gulp.task('watch:work',function(){
-    gulp.watch(['./work/app/**/*.js'], ['webpack:work']);
-
-});
-
-gulp.task('default', function(){
-  runSequence(
-  	'nodemon',
-    'watch'
-  )
 });

@@ -1,0 +1,13 @@
+/** @define App */
+@import './reset.css';
+@import './theme.css';
+@import './base.css';
+
+body{
+    font-family: 'Roboto', sans-serif;
+}
+
+.App-item {
+    width: 300px;
+    padding: 30px;
+}
